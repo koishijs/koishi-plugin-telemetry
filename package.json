@@ -19,7 +19,6 @@
     "plugin"
   ],
   "peerDependencies": {
-    "@koishijs/plugin-notifier": "^1.2.0",
     "koishi": "^4.0.0"
   },
   "devDependencies": {
