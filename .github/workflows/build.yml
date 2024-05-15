@@ -26,7 +26,7 @@ jobs:
       - name: Build Package
         run: |
           corepack enable
-          yarn install
+          yarn install --no-immutable
           yarn build
           yarn pack --filename koishi-plugin-telemetry.tgz
         shell: bash
