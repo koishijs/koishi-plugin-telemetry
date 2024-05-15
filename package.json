@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-telemetry",
-  "description": "Koishi CEIP Service",
-  "version": "0.0.1",
+  "description": "Koishi Developer Service",
+  "version": "0.0.2",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
@@ -9,13 +9,30 @@
     "dist"
   ],
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "build": "atsc -b"
+  },
   "keywords": [
     "chatbot",
-    "koishi",
+    "cordis",
     "plugin"
   ],
   "peerDependencies": {
     "koishi": "^4.16.4"
+  },
+  "devDependencies": {
+    "atsc": "^1.2.2",
+    "koishi": "^4.15.2",
+    "typescript": "^5.2.2"
+  },
+  "koishi": {
+    "description": {
+      "zh": "Koishi 开发者服务",
+      "en": "Koishi Developer Service"
+    },
+    "locales": [
+      "zh",
+      "en"
+    ]
   }
 }
