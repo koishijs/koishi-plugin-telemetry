@@ -7,10 +7,7 @@ export const getMachineId = async (ctx: Context) => {
   const l = ctx.logger('telemetry/utils/id/mid')
 
   const cmid = await getCoreMachineId(ctx)
-  if (!cmid) return false
-
   const menv = await getMachineEnv(ctx)
-  if (!menv) return false
 
   const rawMId = `${cmid}\n${menv}`
 

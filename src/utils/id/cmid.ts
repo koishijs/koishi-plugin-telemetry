@@ -99,29 +99,24 @@ export const getCoreMachineId = async (ctx: Context) => {
 
   let rawCMId: string
 
-  try {
-    switch (platform) {
-      case 'win32': {
-        rawCMId = await getCoreMachineIdForWin32(ctx)
-        break
-      }
-
-      case 'darwin': {
-        rawCMId = await getCoreMachineIdForMacos(ctx)
-        break
-      }
-
-      case 'linux': {
-        rawCMId = await getCoreMachineIdForLinux(ctx)
-        break
-      }
-
-      default:
-        return false
+  switch (platform) {
+    case 'win32': {
+      rawCMId = await getCoreMachineIdForWin32(ctx)
+      break
     }
-  } catch (e) {
-    l.error(e)
-    return false
+
+    case 'darwin': {
+      rawCMId = await getCoreMachineIdForMacos(ctx)
+      break
+    }
+
+    case 'linux': {
+      rawCMId = await getCoreMachineIdForLinux(ctx)
+      break
+    }
+
+    default:
+      throw new Error(`unsupported platform ${platform}`)
   }
 
   l.debug(`raw cmid: ${rawCMId}`)
