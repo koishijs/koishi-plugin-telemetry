@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-telemetry",
   "description": "Koishi Developer Service",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
@@ -18,12 +18,12 @@
     "plugin"
   ],
   "peerDependencies": {
-    "koishi": "^4.16.4"
+    "koishi": "^4.0.0"
   },
   "devDependencies": {
     "atsc": "^1.2.2",
-    "koishi": "^4.15.2",
-    "typescript": "^5.2.2"
+    "koishi": "^4.17.5",
+    "typescript": "^5.5.0-dev.20240509"
   },
   "koishi": {
     "description": {
