@@ -4,6 +4,12 @@ import { TelemetryId } from './plugins'
 
 export const name = 'telemetry'
 
+export const filter = false
+
+export const inject = {
+  optional: ['notifier'],
+}
+
 export interface Config {}
 
 export const Config: Schema<Config> = Schema.object({})

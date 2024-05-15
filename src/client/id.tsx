@@ -45,8 +45,7 @@ const render = (state: State, handleDisplay: () => void) => {
     case 'pending':
       info = (
         <>
-          <p>核心设备 ID：正在获取……</p>
-          <p>设备 ID：正在获取……</p>
+          <p>核心设备 ID：正在获取……{'\n'}设备 ID：正在获取……</p>
         </>
       )
       break
@@ -54,8 +53,10 @@ const render = (state: State, handleDisplay: () => void) => {
     case 'finished':
       info = (
         <>
-          <p>核心设备 ID：{state.display ? state.cmid : '*'.repeat(64)}</p>
-          <p>设备 ID：{state.display ? state.mid : '*'.repeat(64)}</p>
+          <p>
+            核心设备 ID：{state.display ? state.cmid : '*'.repeat(64)}
+            {'\n'}设备 ID：{state.display ? state.mid : '*'.repeat(64)}
+          </p>
         </>
       )
       break
