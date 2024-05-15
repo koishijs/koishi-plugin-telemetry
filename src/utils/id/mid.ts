@@ -16,5 +16,9 @@ export const getMachineId = async (ctx: Context) => {
   const mid = createHash('sha256').update(rawMId).digest('hex')
   l.debug(`mid: ${mid}`)
 
-  return mid
+  return {
+    cmid,
+    menv,
+    mid,
+  }
 }
