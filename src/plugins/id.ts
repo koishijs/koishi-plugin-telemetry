@@ -4,12 +4,12 @@ import { getMachineId } from '../utils/id/mid'
 
 export class TelemetryId {
   constructor(ctx: Context) {
-    this.whenReady = async () => {
+    this.ready = (async () => {
       const { cmid, menv, mid } = await getMachineId(ctx)
       this.cmid = cmid
       this.menv = menv
       this.mid = mid
-    }
+    })()
 
     ctx.plugin(TelemetryIdClient, this)
   }
@@ -18,5 +18,7 @@ export class TelemetryId {
   menv: string
   mid: string
 
-  whenReady: () => Promise<void>
+  ready: Promise<void>
+
+  whenReady = () => this.ready
 }
