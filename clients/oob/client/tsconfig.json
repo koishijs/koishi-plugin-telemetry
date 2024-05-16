@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "rootDir": ".",
+    "module": "ESNext",
+    "target": "ESNext",
+    "moduleResolution": "node",
+    "types": [
+      "@koishijs/client/global",
+    ],
+    "allowSyntheticDefaultImports": true,
+  },
+  "include": [
+    "."
+  ],
+}

@@ -3,8 +3,10 @@ import { readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { cwd } from 'node:process'
 import type { O } from 'ts-toolbelt'
+import { TelemetryOobClient } from '../client'
 import { exists } from '../utils/fs'
 import type { TelemetryBasis } from './basis'
+import { TelemetryId } from './id'
 
 export type TelemetryData = O.Partial<TelemetryDataIntl, 'deep'>
 
@@ -25,6 +27,8 @@ export class TelemetryStorage {
     ctx: Context,
     public basis: TelemetryBasis,
   ) {
+    ctx.plugin(TelemetryId)
+
     this.ready = (async () => {
       // Load storage
       if (!(await exists(this.storagePath))) {
@@ -41,6 +45,13 @@ export class TelemetryStorage {
         this.data.nonoob = true
         await this.save()
       }
+
+      if (!this.data.privacy) ctx.plugin(TelemetryOobClient, this)
+
+      await basis.whenReady()
+
+      if (this.data.privacy && this.data.privacy < basis.hello.privacyVer)
+        ctx.plugin(TelemetryOobClient, this)
     })()
   }
 
@@ -54,7 +65,8 @@ export class TelemetryStorage {
 
   private ready: Promise<void>
 
-  public whenReady = () => Promise.all([this.basis.whenReady(), this.ready])
+  public whenReady = () => this.ready
+  public whenAllReady = () => Promise.all([this.basis.whenReady(), this.ready])
 }
 
 const oob = async (http: HTTP) => {
