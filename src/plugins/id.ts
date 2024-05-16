@@ -18,7 +18,7 @@ export class TelemetryId {
   menv: string
   mid: string
 
-  ready: Promise<void>
+  private ready: Promise<void>
 
   whenReady = () => this.ready
 }
