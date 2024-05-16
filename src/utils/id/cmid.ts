@@ -34,7 +34,7 @@ const getCoreMachineIdForWin32 = async (ctx: Context) => {
 
   const rawCMId = regexWin32.exec(stdout)?.[1]
   if (!rawCMId) {
-    l.error(`full stdout:\n${stdout}\n`)
+    l.debug(`full stdout:\n${stdout}\n`)
     throw new Error('cannot get raw cmid')
   }
 
@@ -61,7 +61,7 @@ const getCoreMachineIdForMacos = async (ctx: Context) => {
 
   let rawCMId = regexMacos.exec(stdout)?.[1]
   if (!rawCMId) {
-    l.error(`full stdout:\n${stdout}\n`)
+    l.debug(`full stdout:\n${stdout}\n`)
     throw new Error('cannot get raw cmid')
   }
 
@@ -88,8 +88,8 @@ const getCoreMachineIdForLinux = async (ctx: Context) => {
   try {
     return (await readFile(path)).toString().trim()
   } catch (e) {
-    l.error('cause:')
-    l.error(e)
+    l.debug('cause:')
+    l.debug(e)
     throw new Error('read cmid failed.')
   }
 }
