@@ -95,6 +95,10 @@ onMounted(() => {
     @media screen and (max-width: 768px) {
       font-size: 0.7rem;
     }
+
+    & a {
+      text-decoration: underline;
+    }
   }
 }
 
