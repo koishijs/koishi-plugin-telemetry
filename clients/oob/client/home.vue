@@ -50,6 +50,8 @@
 
   &-text {
     align-self: center;
+    text-align: center;
+    max-width: 75%;
   }
 
   &-title {
