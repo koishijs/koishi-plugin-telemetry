@@ -11,7 +11,9 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "atsc -b"
+    "build": "concurrently -n be,oob yarn:build:be yarn:build:fe:oob",
+    "build:be": "atsc -b",
+    "build:fe:oob": "koishi-console build clients/oob"
   },
   "keywords": [
     "chatbot",
@@ -22,9 +24,11 @@
     "koishi": "^4.0.0"
   },
   "devDependencies": {
+    "@koishijs/client": "^5.28.4",
     "@koishijs/plugin-console": "^5.28.4",
     "@koishijs/plugin-notifier": "^1.2.0",
     "atsc": "^1.2.2",
+    "concurrently": "^8.2.2",
     "koishi": "^4.17.5",
     "lottie-web": "^5.12.2",
     "ts-toolbelt": "^9.6.0",
