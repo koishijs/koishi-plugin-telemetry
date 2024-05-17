@@ -28,7 +28,7 @@ jobs:
           corepack enable
           yarn install --no-immutable
           yarn build
-          yarn pack --filename koishi-plugin-telemetry.tgz
+          corepack yarn@1.22.22 pack --filename koishi-plugin-telemetry.tgz
         shell: bash
 
       - uses: actions/upload-artifact@v3
