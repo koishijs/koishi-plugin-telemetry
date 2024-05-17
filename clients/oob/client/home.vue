@@ -3,14 +3,19 @@
     <div ref="splash" class="t8-oob-container t8-oob-splash" />
     <div class="t8-oob-container t8-oob-body-container">
       <div class="t8-oob-body">
-        <h1 class="t8-oob-body-text t8-oob-body-title">与我们一起塑造 Koishi 的未来</h1>
+        <h1 class="t8-oob-body-text t8-oob-body-title">
+          与我们一起塑造 Koishi 的未来
+        </h1>
         <p class="t8-oob-body-text t8-oob-body-description">
-          telemetry 服务是一组可选的 Koishi 服务，旨在通过分析您的 Koishi 使用情况来改善 Koishi
+          telemetry 服务是一组可选的 Koishi 服务，旨在通过分析您的 Koishi
+          使用情况来改善 Koishi
           的使用体验、提供精确的插件使用量数据，并仅在您需要时为您提供支持。
           <br />
-          拒绝同意将影响我们提供的相关数据和功能，但不会影响
-          Koishi 的基础功能。要了解更多信息，请参阅我们的
-          <a href="https://legal.ilharper.com/cordis/privacy" target="_blank">隐私政策</a>
+          拒绝同意将影响我们提供的相关数据和功能，但不会影响 Koishi
+          的基础功能。要了解更多信息，请参阅我们的
+          <a href="https://legal.ilharper.com/cordis/privacy" target="_blank"
+            >隐私政策</a
+          >
           。
         </p>
         <div class="t8-oob-action-container">
@@ -23,9 +28,9 @@
 </template>
 
 <script setup lang="ts">
-import splashData from './splash.json'
 import lottie from 'lottie-web/build/player/esm/lottie_svg.min.js'
-import { ref, onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
+import splashData from './splash.json'
 
 const anim = ref(null)
 const splash = ref(null)
@@ -45,14 +50,21 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-
 .t8-oob {
-  height: max(100vh - var(--header-height) - var(--footer-height) - var(--card-margin) - var(--card-margin), 400px);
+  height: max(
+    100vh - var(--header-height) - var(--footer-height) - var(--card-margin) - var(
+        --card-margin
+      ),
+    400px
+  );
 
   margin: var(--card-margin);
 
   @media screen and (max-width: 768px) {
-    height: max(100vh - var(--header-height) - var(--card-margin) - var(--card-margin), 400px);
+    height: max(
+      100vh - var(--header-height) - var(--card-margin) - var(--card-margin),
+      400px
+    );
   }
 }
 
@@ -129,5 +141,4 @@ onMounted(() => {
     stroke: var(--bg3);
   }
 }
-
 </style>

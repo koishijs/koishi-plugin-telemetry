@@ -8,6 +8,7 @@
       "@koishijs/client/global",
     ],
     "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
   },
   "include": [
     "."
