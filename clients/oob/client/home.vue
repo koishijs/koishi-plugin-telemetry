@@ -1,5 +1,6 @@
 <template>
   <div class="k-card t8-oob">
+    <div ref="splash" class="t8-oob-container t8-oob-splash" />
     <div class="t8-oob-container t8-oob-body-container">
       <div class="t8-oob-body">
         <h1 class="t8-oob-body-text t8-oob-body-title">与我们一起塑造 Koishi 的未来</h1>
@@ -21,12 +22,38 @@
   </div>
 </template>
 
+<script setup lang="ts">
+import splashData from './splash.json'
+import lottie from 'lottie-web/build/player/esm/lottie_svg.min.js'
+import { ref, onMounted } from 'vue'
+
+const anim = ref(null)
+const splash = ref(null)
+
+onMounted(() => {
+  anim.value = lottie.loadAnimation({
+    animationData: splashData,
+    container: splash.value,
+    renderer: 'svg',
+    loop: true,
+    autoplay: true,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice',
+    },
+  })
+})
+</script>
+
 <style lang="scss">
 
 .t8-oob {
   height: max(100vh - var(--header-height) - var(--footer-height) - var(--card-margin) - var(--card-margin), 400px);
 
   margin: var(--card-margin);
+
+  @media screen and (max-width: 768px) {
+    height: max(100vh - var(--header-height) - var(--card-margin) - var(--card-margin), 400px);
+  }
 }
 
 .t8-oob-container {
@@ -87,6 +114,16 @@
 
 .t8-oob-accept {
   justify-self: center;
+}
+
+.t8-oob-splash-data {
+  &-a {
+    stroke: var(--bg3);
+  }
+
+  &-b {
+    stroke: var(--bg3);
+  }
 }
 
 </style>

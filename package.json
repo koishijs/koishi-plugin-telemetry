@@ -25,6 +25,8 @@
     "@koishijs/plugin-notifier": "^1.2.0",
     "atsc": "^1.2.2",
     "koishi": "^4.17.5",
+    "lottie-web": "^5.12.2",
+    "ts-toolbelt": "^9.6.0",
     "typescript": "^5.5.0-dev.20240509"
   },
   "koishi": {
