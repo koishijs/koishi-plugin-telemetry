@@ -1,4 +1,5 @@
 import type { Context, HTTP } from 'koishi'
+import { getXsrfToken } from '../utils/xsrf'
 import { TelemetryStorage } from './storage'
 
 export interface Hello {
@@ -25,7 +26,7 @@ export class TelemetryBasis {
 
     this.ready = (async () => {
       try {
-        this.hello = await this.http.post('/hello', {})
+        this.hello = await this.post('/hello', {})
       } catch (e) {
         l.debug('hello failed')
         l.debug(e)
@@ -33,11 +34,25 @@ export class TelemetryBasis {
     })()
   }
 
-  public http: HTTP
+  private http: HTTP
 
-  public hello: Hello
+  public hello: Hello = undefined as unknown as Hello
 
   private ready: Promise<void>
 
   public whenReady = () => this.ready
+
+  public post: HTTP.Request2 = async (
+    url: string,
+    data?: unknown,
+    config?: HTTP.RequestConfig,
+  ) =>
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    this.http.post(url, data, {
+      ...(config || {}),
+      headers: {
+        ...(config?.headers || {}),
+        'X-XSRF-TOKEN': getXsrfToken(),
+      },
+    })
 }

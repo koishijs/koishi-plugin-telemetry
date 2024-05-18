@@ -41,7 +41,7 @@ export class TelemetryStorage {
       }
 
       if (!this.data.nonoob) {
-        void oob(basis.http)
+        void oob(basis.post)
         this.data.nonoob = true
         await this.save()
       }
@@ -69,6 +69,6 @@ export class TelemetryStorage {
   public whenAllReady = () => Promise.all([this.basis.whenReady(), this.ready])
 }
 
-const oob = async (http: HTTP) => {
-  await http.post('/oob', {})
+const oob = async (post: HTTP.Request2) => {
+  await post('/oob', {})
 }
