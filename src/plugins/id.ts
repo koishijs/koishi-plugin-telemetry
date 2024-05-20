@@ -8,6 +8,7 @@ import type { TelemetryStorage } from './storage'
 export type TelemetryIdEvents = {
   update: () => void
   failed: () => void
+  machineReady: () => void
 }
 
 export class TelemetryId extends TypedEventEmitter<TelemetryIdEvents> {
@@ -34,6 +35,7 @@ export class TelemetryId extends TypedEventEmitter<TelemetryIdEvents> {
       this.mid = mid
 
       this.emit('update')
+      this.emit('machineReady')
 
       this.ctx.plugin(TelemetryBundle, this)
     } catch (e) {
