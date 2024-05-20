@@ -50,11 +50,11 @@ const render = (state: State, handleDisplay: () => void) => {
         核心设备 ID：{state.display ? state.cmid : '*'.repeat(64)}
         <br />
         设备 ID：{state.display ? state.mid : '*'.repeat(64)}
-        <br />包 ID：{state.display ? state.mid : '*'.repeat(64)}
+        <br />包 ID：{state.display ? state.bundleId : '*'.repeat(64)}
         <br />
-        实例 ID：{state.display ? state.mid : '*'.repeat(64)}
+        实例 ID：{state.display ? state.instanceId : '*'.repeat(64)}
         <br />
-        会话 ID：{state.display ? state.mid : '*'.repeat(64)}
+        会话 ID：{state.display ? state.sessionId : '*'.repeat(64)}
       </p>
     </>
   )
