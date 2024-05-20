@@ -2,7 +2,31 @@
   <div class="k-card t8-oob">
     <div ref="splash" class="t8-oob-container t8-oob-splash" />
     <div class="t8-oob-container t8-oob-body-container">
-      <div class="t8-oob-body">
+      <div v-if="showDismiss" class="t8-oob-body t8-oob-dismiss-body">
+        <p class="t8-oob-dismiss-title">
+          可否告诉我们是什么原因让你做出此决定？
+        </p>
+        <el-radio-group
+          v-model="dismissReason"
+          class="t8-oob-dismiss-radio-group"
+        >
+          <el-radio :label="1" class="t8-oob-dismiss-radio">我不需要</el-radio>
+          <el-radio :label="2" class="t8-oob-dismiss-radio"
+            >担心个人隐私泄漏</el-radio
+          >
+          <el-radio :label="3" class="t8-oob-dismiss-radio"
+            >担心 telemetry 服务影响性能或内存占用</el-radio
+          >
+          <el-radio :label="4" class="t8-oob-dismiss-radio">其他</el-radio>
+        </el-radio-group>
+        <k-button
+          class="t8-oob-action-confirm-dismiss"
+          @click="handleConfirmDismiss"
+          :disabled="!dismissReason"
+          >确定</k-button
+        >
+      </div>
+      <div v-else class="t8-oob-body">
         <h1 class="t8-oob-body-text t8-oob-body-title">
           与我们一起塑造 Koishi 的未来
         </h1>
@@ -19,8 +43,10 @@
           。
         </p>
         <div class="t8-oob-action-container">
-          <a class="t8-oob-dismiss">不必了</a>
-          <k-button class="t8-oob-accept">同意</k-button>
+          <a class="t8-oob-action-dismiss" @click="handleDismiss">不必了</a>
+          <k-button class="t8-oob-action-accept" @click="handleAccept"
+            >同意</k-button
+          >
         </div>
       </div>
     </div>
@@ -47,6 +73,15 @@ onMounted(() => {
     },
   })
 })
+
+const showDismiss = ref(false)
+const dismissReason = ref(0)
+
+const handleDismiss = () => (showDismiss.value = true)
+
+const handleAccept = async () => {}
+
+const handleConfirmDismiss = async () => {}
 </script>
 
 <style lang="scss">
@@ -121,14 +156,14 @@ onMounted(() => {
   align-items: center;
 }
 
-.t8-oob-dismiss {
+.t8-oob-action-dismiss {
   font-size: 0.8rem;
   margin: 0 1rem;
   justify-self: start;
   color: var(--k-text-light);
 }
 
-.t8-oob-accept {
+.t8-oob-action-accept {
   justify-self: center;
 }
 
@@ -140,5 +175,17 @@ onMounted(() => {
   &-b {
     stroke: var(--bg3);
   }
+}
+
+.t8-oob-dismiss-radio-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0 0 1rem 1rem;
+  gap: 0.5rem;
+}
+
+.t8-oob-action-confirm-dismiss {
+  align-self: start;
 }
 </style>
