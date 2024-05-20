@@ -1,4 +1,5 @@
 import type { Context, HTTP, Logger } from 'koishi'
+import { inspect } from 'node:util'
 import type { Root } from '../types'
 import { getXsrfToken } from '../utils/xsrf'
 import { TelemetryStorage } from './storage'
@@ -23,7 +24,7 @@ export class TelemetryBasis {
     this.#postLogger = ctx.logger('telemetry/post')
 
     this.http = ctx.http.extend({
-      baseURL: 'https://d.ilharper.com/cordis/v1',
+      endpoint: 'https://d.ilharper.com/cordis/v1',
     })
 
     this.ready = this.init()
@@ -76,7 +77,7 @@ export class TelemetryBasis {
       return result
     } catch (e) {
       this.#postLogger.debug(`${url} failed:`)
-      this.#postLogger.debug(e)
+      this.#postLogger.debug(inspect(e))
       this.#postLogger.debug('data:')
       this.#postLogger.debug(data)
 
