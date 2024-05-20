@@ -12,7 +12,7 @@ const getCoreMachineIdForWin32 = async (ctx: Context) => {
   const l = ctx.logger('telemetry/utils/id/cmid')
 
   let reg = 'REG'
-  const regPath = join(env['windir'], 'System32/reg.exe')
+  const regPath = join(env['windir']!, 'System32/reg.exe')
   if (await exists(regPath)) reg = regPath
 
   const child = spawn(
