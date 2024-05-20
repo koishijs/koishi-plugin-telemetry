@@ -20,7 +20,10 @@ export function apply(ctx: Context, storage: TelemetryStorage) {
       reason,
     })
 
-    ctx.scope.dispose()
+    storage.root.update((config) => {
+      config.mode = 'readonly'
+      return config
+    })
   })
 
   ctx.console.addListener('accept', () => {
