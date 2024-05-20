@@ -1,4 +1,4 @@
-import type { Context, HTTP } from 'koishi'
+import type { Context, HTTP, Logger } from 'koishi'
 import type { Root } from '../types'
 import { getXsrfToken } from '../utils/xsrf'
 import { TelemetryStorage } from './storage'
@@ -20,6 +20,7 @@ export class TelemetryBasis {
     ctx: Context,
     public root: Root,
   ) {
+    this.#postLogger = ctx.logger('telemetry/post')
     const l = ctx.logger('telemetry/basis')
 
     this.http = ctx.http.extend({
@@ -48,17 +49,35 @@ export class TelemetryBasis {
 
   public whenReady = () => this.ready
 
+  #postLogger: Logger
+
   public post: HTTP.Request2 = async (
     url: string,
     data?: unknown,
     config?: HTTP.RequestConfig,
-  ) =>
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    this.http.post(url, data, {
-      ...(config || {}),
-      headers: {
-        ...(config?.headers || {}),
-        'X-XSRF-TOKEN': getXsrfToken(),
-      },
-    })
+  ) => {
+    try {
+      const result = (await this.http.post(url, data, {
+        ...(config || {}),
+        headers: {
+          ...(config?.headers || {}),
+          'X-XSRF-TOKEN': getXsrfToken(),
+        },
+      })) as unknown
+
+      this.#postLogger.debug(`${url} success, data:`)
+      this.#postLogger.debug(data)
+      this.#postLogger.debug('response:')
+      this.#postLogger.debug(result)
+
+      return result
+    } catch (e) {
+      this.#postLogger.debug(`${url} failed:`)
+      this.#postLogger.debug(e)
+      this.#postLogger.debug('data:')
+      this.#postLogger.debug(data)
+
+      throw new Error('出现了一个异常（这不会影响 Koishi 的正常运行）。')
+    }
+  }
 }
