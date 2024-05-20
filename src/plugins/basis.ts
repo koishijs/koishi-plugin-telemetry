@@ -17,28 +17,31 @@ export interface HelloAlert {
 
 export class TelemetryBasis {
   constructor(
-    ctx: Context,
+    private ctx: Context,
     public root: Root,
   ) {
     this.#postLogger = ctx.logger('telemetry/post')
-    const l = ctx.logger('telemetry/basis')
 
     this.http = ctx.http.extend({
       baseURL: 'https://d.ilharper.com/cordis/v1',
     })
 
-    this.ready = (async () => {
-      try {
-        this.hello = await this.post('/hello', {})
-      } catch (e) {
-        l.debug('hello failed')
-        l.debug(e)
-      }
-    })()
+    this.ready = this.init()
 
     if (root.config.mode === 'readonly') return
 
     ctx.plugin(TelemetryStorage, this)
+  }
+
+  private init = async () => {
+    const l = this.ctx.logger('telemetry/basis')
+
+    try {
+      this.hello = await this.post('/hello', {})
+    } catch (e) {
+      l.debug('hello failed')
+      l.debug(e)
+    }
   }
 
   private http: HTTP
