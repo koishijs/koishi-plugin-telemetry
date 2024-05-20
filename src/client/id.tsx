@@ -96,16 +96,26 @@ export function apply(ctx: Context, telemetryId: TelemetryId) {
   }
 
   update()
-  void telemetryId
-    .whenReady()
-    .then(() => {
+
+  ctx.effect(() => {
+    const listener = () => {
       state.status = 'finished'
       state.cmid = telemetryId.cmid
       state.mid = telemetryId.mid
       update()
-    })
-    .catch(() => {
+    }
+
+    telemetryId.on('update', listener)
+    return () => telemetryId.off('update', listener)
+  })
+
+  ctx.effect(() => {
+    const listener = () => {
       state.status = 'failed'
       update()
-    })
+    }
+
+    telemetryId.on('failed', listener)
+    return () => telemetryId.off('failed', listener)
+  })
 }
