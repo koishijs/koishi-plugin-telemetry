@@ -7,7 +7,7 @@ import { TelemetryOobClient } from '../client'
 import type { Root } from '../types'
 import { exists } from '../utils/fs'
 import type { TelemetryBasis } from './basis'
-import { TelemetryId } from './id'
+import { TelemetryBundle } from './bundle'
 
 export type TelemetryData = O.Partial<TelemetryDataIntl, 'deep'>
 
@@ -27,60 +27,72 @@ const defaultTelemetryData: TelemetryData = {
 
 export class TelemetryStorage {
   constructor(
-    ctx: Context,
+    private ctx: Context,
     public basis: TelemetryBasis,
   ) {
     this.root = basis.root
 
-    ctx.plugin(TelemetryId)
+    this.privacyReady = new Promise<void>((res) => {
+      this.commitPrivacyReady = res
+    })
 
-    this.ready = (async () => {
-      // Load storage
-      if (!(await exists(this.storagePath))) {
-        this.data = structuredClone(defaultTelemetryData)
-        await writeFile(this.storagePath, JSON.stringify(this.data))
-      } else {
-        this.data = JSON.parse(
-          (await readFile(this.storagePath)).toString(),
-        ) as TelemetryData
-      }
+    void this.init()
+  }
 
-      if (!this.data.nonoob) {
-        void oob(basis.post)
-        this.data.nonoob = true
-        await this.save()
+  private init = async () => {
+    // Load storage
+    if (!(await exists(this.storagePath))) {
+      this.data = structuredClone(defaultTelemetryData)
+      await writeFile(this.storagePath, JSON.stringify(this.data))
+    } else {
+      this.data = JSON.parse(
+        (await readFile(this.storagePath)).toString(),
+      ) as TelemetryData
+    }
 
-        ctx.logger('telemetry').success(`
+    if (!this.data.nonoob) {
+      void oob(this.basis.post)
+      this.data.nonoob = true
+      await this.save()
+
+      this.ctx.logger('telemetry').success(`
 欢迎使用 Koishi！
 telemetry 服务是一组可选的 Koishi 服务，旨在通过分析您的 Koishi 使用情况来改善 Koishi 的使用体验、提供精确的插件使用量数据，并仅在您需要时为您提供支持。
 拒绝同意将影响我们提供的相关数据和功能，但不会影响 Koishi 的基础功能。
 要了解更多信息，请打开 Koishi 控制台并参阅我们的隐私政策。在您点击「同意」前，telemetry 服务不会启动。
 `)
-      }
+    }
 
-      if (!this.data.privacy) ctx.plugin(TelemetryOobClient, this)
+    // OOB. Pop OOB client.
+    if (!this.data.privacy) this.ctx.plugin(TelemetryOobClient, this)
 
-      await basis.whenReady()
+    await this.basis.whenReady()
 
-      if (this.data.privacy && this.data.privacy < basis.hello.privacyVer)
-        ctx.plugin(TelemetryOobClient, this)
-    })()
+    if (this.data.privacy)
+      if (this.data.privacy < this.basis.hello.privacyVer)
+        // Privacy updated. Pop OOB client.
+        this.ctx.plugin(TelemetryOobClient, this)
+      // Stored privacy ver equals remote. Directly commit privacy.
+      else this.commitPrivacyReady()
+
+    await this.privacyReady
+
+    this.ctx.plugin(TelemetryBundle, this)
   }
+
+  private privacyReady: Promise<void> = undefined as unknown as Promise<void>
+
+  public commitPrivacyReady: () => void = undefined as unknown as () => void
 
   private storagePath = join(cwd(), 'data/telemetry.json')
 
-  public data: TelemetryData
+  public data: TelemetryData = undefined as unknown as TelemetryData
 
   public root: Root
 
-  public save = async () => {
+  private save = async () => {
     await writeFile(this.storagePath, JSON.stringify(this.data))
   }
-
-  private ready: Promise<void>
-
-  public whenReady = () => this.ready
-  public whenAllReady = () => Promise.all([this.basis.whenReady(), this.ready])
 }
 
 const oob = async (post: HTTP.Request2) => {
