@@ -7,7 +7,7 @@ import { TelemetryOobClient } from '../client'
 import type { Root } from '../types'
 import { exists } from '../utils/fs'
 import type { TelemetryBasis } from './basis'
-import { TelemetryBundle } from './bundle'
+import { TelemetryId } from './id'
 
 export type TelemetryData = O.Partial<TelemetryDataIntl, 'deep'>
 
@@ -77,7 +77,7 @@ telemetry 服务是一组可选的 Koishi 服务，旨在通过分析您的 Kois
 
     await this.privacyReady
 
-    this.ctx.plugin(TelemetryBundle, this)
+    this.ctx.plugin(TelemetryId, this)
   }
 
   private privacyReady: Promise<void> = undefined as unknown as Promise<void>

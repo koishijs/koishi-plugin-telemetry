@@ -1,24 +1,29 @@
 import type { Context } from 'koishi'
 import { TelemetryIdClient } from '../client'
 import { getMachineId } from '../utils/id/mid'
+import { TelemetryBundle } from './bundle'
+import type { TelemetryStorage } from './storage'
 
 export class TelemetryId {
-  constructor(ctx: Context) {
-    this.ready = (async () => {
-      const { cmid, menv, mid } = await getMachineId(ctx)
-      this.cmid = cmid
-      this.menv = menv
-      this.mid = mid
-    })()
+  constructor(
+    private ctx: Context,
+    public storage: TelemetryStorage,
+  ) {
+    void this.init()
 
     ctx.plugin(TelemetryIdClient, this)
   }
 
-  cmid: string
-  menv: string
-  mid: string
+  cmid: string = undefined as unknown as string
+  menv: string = undefined as unknown as string
+  mid: string = undefined as unknown as string
 
-  private ready: Promise<void>
+  private init = async () => {
+    const { cmid, menv, mid } = await getMachineId(this.ctx)
+    this.cmid = cmid
+    this.menv = menv
+    this.mid = mid
 
-  whenReady = () => this.ready
+    this.ctx.plugin(TelemetryBundle, this)
+  }
 }
