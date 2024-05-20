@@ -98,6 +98,11 @@ telemetry 服务是一组可选的 Koishi 服务，旨在通过分析您的 Kois
     this.data.bundleId = bundleId
     return this.save()
   }
+
+  public saveInstanceId = async (instanceId: string) => {
+    this.data.instanceId = instanceId
+    return this.save()
+  }
 }
 
 const oob = async (post: HTTP.Request2) => {
