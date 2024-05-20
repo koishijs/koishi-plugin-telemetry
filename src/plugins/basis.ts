@@ -16,7 +16,10 @@ export interface HelloAlert {
 }
 
 export class TelemetryBasis {
-  constructor(ctx: Context, root: Root) {
+  constructor(
+    ctx: Context,
+    public root: Root,
+  ) {
     const l = ctx.logger('telemetry/basis')
 
     this.http = ctx.http.extend({
