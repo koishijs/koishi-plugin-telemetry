@@ -45,12 +45,12 @@ export class TelemetryInstance {
         return
       }
 
+      this.id.setInstanceId(result.instanceId)
+
       if (!this.storage.data.instanceId) {
-        this.id.setInstanceId(result.instanceId)
         await this.storage.saveInstanceId(result.instanceId)
       } else if (result.instanceId !== this.storage.data.instanceId) {
         const oldInstanceId = this.storage.data.instanceId
-        this.id.setInstanceId(result.instanceId)
         await this.storage.saveInstanceId(result.instanceId)
         void this.post('/instch', {
           chToken: result.chToken,

@@ -43,6 +43,7 @@ export class TelemetryBundle {
       this.id.setFailed()
       return
     }
+    this.id.setBundleId(result.bundleId)
     await this.storage.saveBundleId(result.bundleId)
 
     await sleep(5000)
