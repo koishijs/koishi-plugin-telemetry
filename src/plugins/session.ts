@@ -23,8 +23,6 @@ export class TelemetrySession {
   public basis: TelemetryBasis
   public post: HTTP.Request2
 
-  public sessionId: string = undefined as unknown as string
-
   #init = async () => {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     const result = (await this.post('/session', {
@@ -42,7 +40,7 @@ export class TelemetrySession {
     this.ctx.setInterval(
       () => {
         void this.post('/alive', {
-          sessionId: this.sessionId,
+          sessionId: this.id.sessionId,
         })
       },
       30 * 60 * 1000,
