@@ -15,7 +15,13 @@ export const inject = {
 export function apply(ctx: Context, config: Config) {
   if (config.mode === 'off') return
 
+  const update = (configModifier: (config: Config) => Config) => {
+    const newConfig = configModifier(structuredClone(config))
+    ctx.scope.update(newConfig, true)
+  }
+
   ctx.plugin(TelemetryBasis, {
     config,
+    update,
   })
 }

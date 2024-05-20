@@ -21,4 +21,5 @@ export const Config: Schema<Config> = Schema.intersect([
 
 export interface Root {
   config: Config
+  update: (configModifier: (config: Config) => Config) => void
 }
