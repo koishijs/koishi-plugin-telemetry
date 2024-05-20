@@ -82,7 +82,7 @@ telemetry 服务是一组可选的 Koishi 服务，旨在通过分析您的 Kois
 
   private privacyReady: Promise<void> = undefined as unknown as Promise<void>
 
-  public commitPrivacyReady: () => void = undefined as unknown as () => void
+  private commitPrivacyReady: () => void = undefined as unknown as () => void
 
   private storagePath = join(cwd(), 'data/telemetry.json')
 
@@ -92,6 +92,12 @@ telemetry 服务是一组可选的 Koishi 服务，旨在通过分析您的 Kois
 
   private save = async () => {
     await writeFile(this.storagePath, JSON.stringify(this.data))
+  }
+
+  public commitPrivacy = async () => {
+    this.data.privacy = this.basis.hello.privacyVer
+    await this.save()
+    this.commitPrivacyReady()
   }
 
   public saveBundleId = async (bundleId: string) => {

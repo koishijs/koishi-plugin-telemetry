@@ -54,6 +54,7 @@
 </template>
 
 <script setup lang="ts">
+import { send } from '@koishijs/client'
 import lottie from 'lottie-web/build/player/esm/lottie_svg.min.js'
 import { onMounted, ref } from 'vue'
 import splashData from './splash.json'
@@ -79,9 +80,9 @@ const dismissReason = ref(0)
 
 const handleDismiss = () => (showDismiss.value = true)
 
-const handleAccept = async () => {}
+const handleAccept = () => send('accept')
 
-const handleConfirmDismiss = async () => {}
+const handleConfirmDismiss = () => send('dismiss', dismissReason.value)
 </script>
 
 <style lang="scss">
