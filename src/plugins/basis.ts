@@ -1,4 +1,5 @@
 import type { Context, HTTP } from 'koishi'
+import type { Root } from '../types'
 import { getXsrfToken } from '../utils/xsrf'
 import { TelemetryStorage } from './storage'
 
@@ -15,14 +16,12 @@ export interface HelloAlert {
 }
 
 export class TelemetryBasis {
-  constructor(ctx: Context) {
+  constructor(ctx: Context, root: Root) {
     const l = ctx.logger('telemetry/basis')
 
     this.http = ctx.http.extend({
       baseURL: 'https://d.ilharper.com/cordis/v1',
     })
-
-    ctx.plugin(TelemetryStorage, this)
 
     this.ready = (async () => {
       try {
@@ -32,6 +31,10 @@ export class TelemetryBasis {
         l.debug(e)
       }
     })()
+
+    if (root.config.mode === 'readonly') return
+
+    ctx.plugin(TelemetryStorage, this)
   }
 
   private http: HTTP

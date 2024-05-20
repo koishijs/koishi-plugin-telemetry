@@ -15,5 +15,7 @@ export const inject = {
 export function apply(ctx: Context, config: Config) {
   if (config.mode === 'off') return
 
-  ctx.plugin(TelemetryBasis)
+  ctx.plugin(TelemetryBasis, {
+    config,
+  })
 }
