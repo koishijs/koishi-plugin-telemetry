@@ -23,9 +23,12 @@ export class TelemetryId extends TypedEventEmitter<TelemetryIdEvents> {
     ctx.plugin(TelemetryIdClient, this)
   }
 
-  cmid: string = undefined as unknown as string
-  menv: string = undefined as unknown as string
-  mid: string = undefined as unknown as string
+  cmid: string | undefined = undefined
+  menv: string | undefined = undefined
+  mid: string | undefined = undefined
+  bundleId: string | undefined = undefined
+  instanceId: string | undefined = undefined
+  sessionId: string | undefined = undefined
 
   private init = async () => {
     try {
@@ -42,4 +45,21 @@ export class TelemetryId extends TypedEventEmitter<TelemetryIdEvents> {
       this.emit('failed')
     }
   }
+
+  public setBundleId = (bundleId: string) => {
+    this.bundleId = bundleId
+    this.emit('update')
+  }
+
+  public setInstanceId = (instanceId: string) => {
+    this.instanceId = instanceId
+    this.emit('update')
+  }
+
+  public setSessionId = (sessionId: string) => {
+    this.sessionId = sessionId
+    this.emit('update')
+  }
+
+  public setFailed = () => this.emit('failed')
 }

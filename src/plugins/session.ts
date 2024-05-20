@@ -31,7 +31,12 @@ export class TelemetrySession {
       instanceId: this.storage.data.instanceId,
     })) as SessionResponse
 
-    if (!result.sessionId) return
+    if (!result.sessionId) {
+      this.id.setFailed()
+      return
+    }
+
+    this.id.setSessionId(result.sessionId)
 
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.ctx.setInterval(

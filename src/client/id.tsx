@@ -1,5 +1,5 @@
 import type {} from '@koishijs/plugin-notifier'
-import type { Context, h } from 'koishi'
+import type { Context } from 'koishi'
 import type { TelemetryId } from '../plugins'
 
 export const name = 'telemetry-id-client'
@@ -7,11 +7,16 @@ export const name = 'telemetry-id-client'
 export const inject = ['notifier']
 
 interface State {
-  status: 'pending' | 'finished' | 'failed'
+  status: 'normal' | 'failed'
   display: boolean
   cmid: string
   mid: string
+  bundleId: string
+  instanceId: string
+  sessionId: string
 }
+
+const loading = '正在获取……'
 
 const render = (state: State, handleDisplay: () => void) => {
   const header = (
@@ -39,33 +44,20 @@ const render = (state: State, handleDisplay: () => void) => {
     </>
   )
 
-  let info: h
-
-  switch (state.status) {
-    case 'pending':
-      info = (
-        <>
-          <p>
-            核心设备 ID：正在获取……
-            <br />
-            设备 ID：正在获取……
-          </p>
-        </>
-      )
-      break
-
-    case 'finished':
-      info = (
-        <>
-          <p>
-            核心设备 ID：{state.display ? state.cmid : '*'.repeat(64)}
-            <br />
-            设备 ID：{state.display ? state.mid : '*'.repeat(64)}
-          </p>
-        </>
-      )
-      break
-  }
+  let info = (
+    <>
+      <p>
+        核心设备 ID：{state.display ? state.cmid : '*'.repeat(64)}
+        <br />
+        设备 ID：{state.display ? state.mid : '*'.repeat(64)}
+        <br />包 ID：{state.display ? state.mid : '*'.repeat(64)}
+        <br />
+        实例 ID：{state.display ? state.mid : '*'.repeat(64)}
+        <br />
+        会话 ID：{state.display ? state.mid : '*'.repeat(64)}
+      </p>
+    </>
+  )
 
   return (
     <>
@@ -80,10 +72,13 @@ export function apply(ctx: Context, telemetryId: TelemetryId) {
   const notifier = ctx.notifier.create()
 
   const state: State = {
-    status: 'pending',
+    status: 'normal',
     display: false,
-    cmid: '',
-    mid: '正在获取……',
+    cmid: loading,
+    mid: loading,
+    bundleId: loading,
+    instanceId: loading,
+    sessionId: loading,
   }
 
   const handleDisplay = () => {
@@ -99,9 +94,11 @@ export function apply(ctx: Context, telemetryId: TelemetryId) {
 
   ctx.effect(() => {
     const listener = () => {
-      state.status = 'finished'
-      state.cmid = telemetryId.cmid
-      state.mid = telemetryId.mid
+      state.cmid = telemetryId.cmid || loading
+      state.mid = telemetryId.mid || loading
+      state.bundleId = telemetryId.bundleId || loading
+      state.instanceId = telemetryId.instanceId || loading
+      state.sessionId = telemetryId.sessionId || loading
       update()
     }
 

@@ -1,4 +1,5 @@
 import type { Context, HTTP } from 'koishi'
+import { sleep } from 'koishi'
 import type { TelemetryBasis } from './basis'
 import type { TelemetryId } from './id'
 import { TelemetryInstance } from './instance'
@@ -26,6 +27,7 @@ export class TelemetryBundle {
 
   private init = async () => {
     if (this.storage.data.bundleId) {
+      this.id.setBundleId(this.storage.data.bundleId)
       this.ctx.plugin(TelemetryInstance, this.id)
       return
     }
@@ -37,8 +39,13 @@ export class TelemetryBundle {
       machineId: this.id.mid,
     })) as BundleResponse
 
-    if (!result.bundleId) return
+    if (!result.bundleId) {
+      this.id.setFailed()
+      return
+    }
     await this.storage.saveBundleId(result.bundleId)
+
+    await sleep(5000)
 
     this.ctx.plugin(TelemetryInstance, this.id)
   }
