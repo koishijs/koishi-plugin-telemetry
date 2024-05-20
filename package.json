@@ -27,6 +27,7 @@
     "@koishijs/client": "^5.28.4",
     "@koishijs/plugin-console": "^5.28.4",
     "@koishijs/plugin-notifier": "^1.2.0",
+    "@tsconfig/strictest": "^2.0.5",
     "atsc": "^1.2.2",
     "concurrently": "^8.2.2",
     "koishi": "^4.17.5",
