@@ -1,4 +1,4 @@
-import type { Context, HTTP } from 'koishi'
+import type { Context, HTTP, Logger } from 'koishi'
 import { sleep } from 'koishi'
 import type { TelemetryBasis } from './basis'
 import type { TelemetryId } from './id'
@@ -14,12 +14,15 @@ export class TelemetryBundle {
     private ctx: Context,
     public id: TelemetryId,
   ) {
+    this.#l = ctx.logger('telemetry/bundle')
     this.storage = id.storage
     this.basis = this.storage.basis
     this.post = this.basis.post
 
     void this.init()
   }
+
+  #l: Logger
 
   public storage: TelemetryStorage
   public basis: TelemetryBasis
@@ -32,19 +35,25 @@ export class TelemetryBundle {
       return
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-    const result = (await this.post('/bundle', {
-      coreMachineId: this.id.cmid,
-      machineEnv: this.id.menv,
-      machineId: this.id.mid,
-    })) as BundleResponse
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+      const result = (await this.post('/bundle', {
+        coreMachineId: this.id.cmid,
+        machineEnv: this.id.menv,
+        machineId: this.id.mid,
+      })) as BundleResponse
 
-    if (!result.bundleId) {
+      if (!result.bundleId) {
+        this.id.setFailed()
+        return
+      }
+      this.id.setBundleId(result.bundleId)
+      await this.storage.saveBundleId(result.bundleId)
+    } catch (e) {
+      this.#l.debug('bundle failed')
       this.id.setFailed()
       return
     }
-    this.id.setBundleId(result.bundleId)
-    await this.storage.saveBundleId(result.bundleId)
 
     await sleep(5000)
 

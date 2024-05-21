@@ -1,5 +1,6 @@
 import type {} from '@koishijs/plugin-console'
 import type { Context } from 'koishi'
+import { sleep } from 'koishi'
 import { resolve } from 'node:path'
 import type { TelemetryStorage } from '../plugins'
 
@@ -16,9 +17,16 @@ declare module '@koishijs/plugin-console' {
 
 export function apply(ctx: Context, storage: TelemetryStorage) {
   ctx.console.addListener('dismiss', async (reason) => {
-    await storage.basis.post('/dismiss', {
-      reason,
-    })
+    try {
+      await Promise.any([
+        storage.basis.post('/dismiss', {
+          reason,
+        }),
+        sleep(3000),
+      ])
+    } catch (e) {
+      // Ignore
+    }
 
     storage.root.update((config) => {
       config.mode = 'readonly'

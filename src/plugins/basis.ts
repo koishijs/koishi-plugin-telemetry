@@ -18,9 +18,10 @@ export interface HelloAlert {
 
 export class TelemetryBasis {
   constructor(
-    private ctx: Context,
+    ctx: Context,
     public root: Root,
   ) {
+    this.#l = ctx.logger('telemetry/basis')
     this.#postLogger = ctx.logger('telemetry/post')
 
     this.http = ctx.http.extend({
@@ -34,14 +35,13 @@ export class TelemetryBasis {
     ctx.plugin(TelemetryStorage, this)
   }
 
-  private init = async () => {
-    const l = this.ctx.logger('telemetry/basis')
+  #l: Logger
 
+  private init = async () => {
     try {
       this.hello = await this.post('/hello', {})
     } catch (e) {
-      l.debug('hello failed')
-      l.debug(e)
+      this.#l.debug('hello failed')
     }
   }
 

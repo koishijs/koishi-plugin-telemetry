@@ -1,4 +1,4 @@
-import type { Context, HTTP } from 'koishi'
+import type { Context, HTTP, Logger } from 'koishi'
 import { sleep } from 'koishi'
 import { getInstanceEnv } from '../utils/id/ienv'
 import type { TelemetryBasis } from './basis'
@@ -16,12 +16,15 @@ export class TelemetryInstance {
     private ctx: Context,
     public id: TelemetryId,
   ) {
+    this.#l = ctx.logger('telemetry/instance')
     this.storage = id.storage
     this.basis = this.storage.basis
     this.post = this.basis.post
 
     void this.#init()
   }
+
+  #l: Logger
 
   public storage: TelemetryStorage
   public basis: TelemetryBasis
@@ -55,14 +58,16 @@ export class TelemetryInstance {
         void this.post('/instch', {
           chToken: result.chToken,
           oldInstanceId,
-        })
+        }).catch(() => this.#l.debug('instch failed'))
       }
 
       await sleep(5000)
 
       this.ctx.plugin(TelemetrySession, this.id)
     } catch (e) {
+      this.#l.debug('instance failed')
       this.id.setFailed()
+      return
     }
   }
 }

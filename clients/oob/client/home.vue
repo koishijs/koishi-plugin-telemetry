@@ -82,7 +82,10 @@ const handleDismiss = () => (showDismiss.value = true)
 
 const handleAccept = () => send('accept')
 
-const handleConfirmDismiss = () => send('dismiss', dismissReason.value)
+const handleConfirmDismiss = async () => {
+  await send('dismiss', dismissReason.value)
+  dismissReason.value = 0
+}
 </script>
 
 <style lang="scss">

@@ -1,4 +1,4 @@
-import type { Context, HTTP } from 'koishi'
+import type { Context, HTTP, Logger } from 'koishi'
 import { readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { cwd } from 'node:process'
@@ -30,6 +30,7 @@ export class TelemetryStorage {
     private ctx: Context,
     public basis: TelemetryBasis,
   ) {
+    this.#l = ctx.logger('telemetry/storage')
     this.root = basis.root
 
     this.privacyReady = new Promise<void>((res) => {
@@ -38,6 +39,8 @@ export class TelemetryStorage {
 
     void this.init()
   }
+
+  #l: Logger
 
   private init = async () => {
     // Load storage
@@ -51,7 +54,7 @@ export class TelemetryStorage {
     }
 
     if (!this.data.nonoob) {
-      void oob(this.basis.post)
+      this.#oob(this.basis.post)
       this.data.nonoob = true
       await this.save()
 
@@ -109,8 +112,8 @@ telemetry 服务是一组可选的 Koishi 服务，旨在通过分析您的 Kois
     this.data.instanceId = instanceId
     return this.save()
   }
-}
 
-const oob = async (post: HTTP.Request2) => {
-  await post('/oob', {})
+  #oob = (post: HTTP.Request2) => {
+    void post('/oob', {}).catch(() => this.#l.debug('oob failed'))
+  }
 }
