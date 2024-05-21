@@ -69,7 +69,10 @@ telemetry 服务是一组可选的 Koishi 服务，旨在通过分析您的 Kois
     // OOB. Pop OOB client.
     if (!this.data.privacy) this.ctx.plugin(TelemetryOobClient, this)
 
-    await this.basis.whenReady()
+    if (!(await this.basis.whenReady())) {
+      this.#l.debug('basis whenReady failed')
+      return
+    }
 
     if (this.data.privacy)
       if (this.data.privacy < this.basis.hello.privacyVer)

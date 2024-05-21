@@ -25,7 +25,7 @@ export class TelemetryBasis {
     this.#postLogger = ctx.logger('telemetry/post')
 
     this.http = ctx.http.extend({
-      endpoint: 'https://d.ilharper.com/cordis/v1',
+      endpoint: 'http://localhost/cordis/v1',
     })
 
     this.ready = this.init()
@@ -40,8 +40,10 @@ export class TelemetryBasis {
   private init = async () => {
     try {
       this.hello = await this.post('/hello', {})
+      return true
     } catch (e) {
       this.#l.debug('hello failed')
+      return false
     }
   }
 
@@ -49,7 +51,7 @@ export class TelemetryBasis {
 
   public hello: Hello = undefined as unknown as Hello
 
-  private ready: Promise<void>
+  private ready: Promise<boolean>
 
   public whenReady = () => this.ready
 
