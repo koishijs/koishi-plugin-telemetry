@@ -2,7 +2,7 @@
   "name": "koishi-plugin-telemetry",
   "packageManager": "yarn@4.2.1",
   "description": "Koishi Developer Service",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
