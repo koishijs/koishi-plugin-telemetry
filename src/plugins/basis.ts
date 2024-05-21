@@ -25,7 +25,7 @@ export class TelemetryBasis {
     this.#postLogger = ctx.logger('telemetry/post')
 
     this.http = ctx.http.extend({
-      endpoint: 'http://localhost/cordis/v1',
+      endpoint: 'https://d.ilharper.com/cordis/v1',
     })
 
     this.ready = this.init()
