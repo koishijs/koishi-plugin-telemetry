@@ -16,26 +16,28 @@ declare module '@koishijs/plugin-console' {
 }
 
 export function apply(ctx: Context, storage: TelemetryStorage) {
-  ctx.console.addListener('dismiss', async (reason) => {
-    try {
-      await Promise.any([
-        storage.basis.post('/dismiss', {
-          reason,
-        }),
-        sleep(3000),
-      ])
-    } catch (e) {
-      // Ignore
-    }
+  ctx.console.addListener('dismiss', (reason) => {
+    void (async () => {
+      try {
+        await Promise.any([
+          storage.basis.post('/dismiss', {
+            reason,
+          }),
+          sleep(3000),
+        ])
+      } catch (e) {
+        // Ignore
+      }
 
-    storage.root.update((config) => {
-      config.mode = 'readonly'
-      return config
-    })
+      storage.root.update((config) => {
+        config.mode = 'readonly'
+        return config
+      })
+    })()
   })
 
-  ctx.console.addListener('accept', async () => {
-    await storage.commitPrivacy()
+  ctx.console.addListener('accept', () => {
+    void storage.commitPrivacy()
 
     ctx.scope.dispose()
   })
