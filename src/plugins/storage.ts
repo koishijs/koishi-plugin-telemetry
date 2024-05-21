@@ -74,6 +74,12 @@ telemetry 服务是一组可选的 Koishi 服务，旨在通过分析您的 Kois
       return
     }
 
+    this.commitPrivacy = async () => {
+      this.data.privacy = this.basis.hello.privacyVer
+      await this.save()
+      this.commitPrivacyReady()
+    }
+
     if (this.data.privacy)
       if (this.data.privacy < this.basis.hello.privacyVer)
         // Privacy updated. Pop OOB client.
@@ -100,11 +106,7 @@ telemetry 服务是一组可选的 Koishi 服务，旨在通过分析您的 Kois
     await writeFile(this.storagePath, JSON.stringify(this.data))
   }
 
-  public commitPrivacy = async () => {
-    this.data.privacy = this.basis.hello.privacyVer
-    await this.save()
-    this.commitPrivacyReady()
-  }
+  public commitPrivacy = async () => {}
 
   public saveBundleId = async (bundleId: string) => {
     this.data.bundleId = bundleId
