@@ -1,5 +1,5 @@
 import type { Context, HTTP, Logger } from 'koishi'
-import { readFile, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { cwd } from 'node:process'
 import type { O } from 'ts-toolbelt'
@@ -43,6 +43,10 @@ export class TelemetryStorage {
   #l: Logger
 
   private init = async () => {
+    await mkdir(join(cwd(), 'data'), {
+      recursive: true,
+    })
+
     // Load storage
     if (!(await exists(this.storagePath))) {
       this.data = structuredClone(defaultTelemetryData)
